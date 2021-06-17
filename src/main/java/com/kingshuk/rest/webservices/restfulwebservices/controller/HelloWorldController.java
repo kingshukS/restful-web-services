@@ -20,27 +20,27 @@ public class HelloWorldController {
     private MessageSource messageSource;
 
     @GetMapping("/hello-world")
-    public String hellowWorld() {
+    public String helloWorld() {
         return "Hello World";
     }
 
     @GetMapping("/hello-world-bean")
-    public HelloWorldBean hellowWorldBean() {
+    public HelloWorldBean helloWorldBean() {
         return new HelloWorldBean("Hello World");
     }
 
     @GetMapping("/hello-world-bean/path-variable/{name}")
-    public HelloWorldBean hellowWorldBeanPathVariable(@PathVariable("name") String name) {
+    public HelloWorldBean helloWorldBeanPathVariable(@PathVariable("name") String name) {
         return new HelloWorldBean(String.format("Hello World, %s", name));
     }
 
     @GetMapping("/hello-world-in")
-    public String hellowWorldInternationalized(@RequestHeader(name="Accept-Language", required=false) Locale locale) {
-        return messageSource.getMessage("message.hellowWorld.key", null, locale);
+    public String helloWorldInternationalized(@RequestHeader(name="Accept-Language", required=false) Locale locale) {
+        return messageSource.getMessage("message.helloWorld.key", null, locale);
     }
 
     @GetMapping("/hello-world-in-improved")
-    public String hellowWorldInternationalizedImproved() {
-        return messageSource.getMessage("message.hellowWorld.key", null, LocaleContextHolder.getLocale());
+    public String helloWorldInternationalizedImproved() {
+        return messageSource.getMessage("message.helloWorld.key", null, LocaleContextHolder.getLocale());
     }
 }

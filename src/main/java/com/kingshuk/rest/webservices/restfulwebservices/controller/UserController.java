@@ -5,10 +5,9 @@ import com.kingshuk.rest.webservices.restfulwebservices.model.User;
 import com.kingshuk.rest.webservices.restfulwebservices.service.UserDaoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.EntityModel;
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
+
 
 import org.springframework.hateoas.Link;
-import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.LinkedMultiValueMap;
@@ -21,6 +20,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
+
 @RequestMapping("/api/user")
 @RestController
 public class UserController {
@@ -32,7 +34,7 @@ public class UserController {
     public List<EntityModel<User>> getAllUsers() {
         List<EntityModel<User>> entityList = new ArrayList<>();
         List<User> userList = userDaoService.findAll();
-        for(User user : userList){
+        for (User user : userList) {
             EntityModel<User> userEntity = EntityModel.of(user);
             Link linkToUser = linkTo(methodOn(this.getClass()).getAllUsers()).slash(user.getId()).withSelfRel();
             userEntity.add(linkToUser);
@@ -44,8 +46,8 @@ public class UserController {
     @GetMapping("/users/{id}")
     public List<EntityModel<User>> getUser(@PathVariable("id") Integer id) {
         User user = userDaoService.findOne(id);
-        if(user == null)
-            throw new UserNotFoundException("id = "+id);
+        if (user == null)
+            throw new UserNotFoundException("id = " + id);
         EntityModel<User> userEntity = EntityModel.of(user);
         Link linkToUsers = linkTo(methodOn(this.getClass()).getAllUsers()).withRel("all-users");
         Link linkToUser = linkTo(methodOn(this.getClass()).getAllUsers()).slash(user.getId()).withSelfRel();
@@ -58,20 +60,21 @@ public class UserController {
     public ResponseEntity<User> createUser(@Valid @RequestBody User user) {
         User savedUser = userDaoService.save(user);
         String location = ServletUriComponentsBuilder
-                        .fromCurrentRequestUri()
-                        .path("/{id}")
-                        .buildAndExpand(savedUser.getId())
-                        .toUriString();
-        MultiValueMap<String,String> headers = new LinkedMultiValueMap<>();
-        headers.add("location",location);
+                .fromCurrentRequestUri()
+                .path("/{id}")
+                .buildAndExpand(savedUser.getId())
+                .toUriString();
+        MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
+        headers.add("location", location);
         // ResponseEntity.created(location)
         return new ResponseEntity<User>(savedUser, headers, HttpStatus.CREATED);
     }
+
     @DeleteMapping("/users/{id}")
-    public User deleteUser(@PathVariable("id") Integer id){
+    public User deleteUser(@PathVariable("id") Integer id) {
         User deletedUser = userDaoService.deleteUserById(id);
-        if(deletedUser == null)
-            throw new UserNotFoundException("id = "+id);
+        if (deletedUser == null)
+            throw new UserNotFoundException("id = " + id);
         return deletedUser;
     }
 }
