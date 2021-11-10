@@ -16,14 +16,20 @@ import java.util.Date;
 public class CustomResponseEntityExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(Exception.class)
-    public final ResponseEntity<Object> handleAllException(Exception ex, WebRequest request) throws Exception {
-        ErrorResponse response = new ErrorResponse(new Date(),ex.getMessage(),request.getDescription(true));
+    public final ResponseEntity<ErrorResponse> handleAllException(Exception ex, WebRequest request) throws Exception {
+        ErrorResponse response = new ErrorResponse(new Date(), ex.getMessage(), request.getDescription(true));
         return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     @ExceptionHandler(UserNotFoundException.class)
-    public final ResponseEntity<Object> handleUserNotFoundException(Exception ex, WebRequest request) throws Exception {
-        ErrorResponse response = new ErrorResponse(new Date(),ex.getMessage(),request.getDescription(true));
+    public final ResponseEntity<ErrorResponse> handleUserNotFoundException(Exception ex, WebRequest request) throws Exception {
+        ErrorResponse response = new ErrorResponse(new Date(), ex.getMessage(), request.getDescription(false));
+        return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(PostNotFoundException.class)
+    public final ResponseEntity<ErrorResponse> handlePostNotFoundException(Exception ex, WebRequest request) throws Exception {
+        ErrorResponse response = new ErrorResponse(new Date(), ex.getMessage(), request.getDescription(false));
         return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
     }
 
@@ -31,7 +37,7 @@ public class CustomResponseEntityExceptionHandler extends ResponseEntityExceptio
     protected ResponseEntity<Object> handleMethodArgumentNotValid(
             MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
         ErrorResponse response = new ErrorResponse(new Date(),
-                "Validation Failed. "+ex.getBindingResult().getFieldError().getDefaultMessage(),ex.getMessage());
+                "Validation Failed. " + ex.getBindingResult().getFieldError().getDefaultMessage(), ex.getMessage());
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 }
