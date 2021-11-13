@@ -12,7 +12,7 @@ public class User {
 
     private static int postCount = 5;
     private Integer id;
-    @Size(min = 2, message = "Name must have at least 2 characters.")
+    @Size(min = 2, message = "{error.length.name}")
     private String name;
     @Past
     private Date birthDate;

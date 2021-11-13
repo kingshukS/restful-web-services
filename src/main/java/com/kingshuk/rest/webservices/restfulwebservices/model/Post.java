@@ -1,14 +1,19 @@
 package com.kingshuk.rest.webservices.restfulwebservices.model;
 
+import org.springframework.beans.factory.annotation.Value;
+
 import javax.validation.constraints.Size;
 import java.util.Date;
 
 public class Post {
 
+    @Value("${error.length.title:Default Hello World}")
+    private String defaultMessage;
+
     private Integer id;
-    @Size(min = 5, message = "Title must have at least 5 characters.")
+    @Size(min = 5, message = "{error.length.title}")
     private String title;
-    @Size(min = 10, message = "Post must have at least 10 characters.")
+    @Size(min = 10, message = "{error.length.details}")
     private String details;
     private Date created;
 
