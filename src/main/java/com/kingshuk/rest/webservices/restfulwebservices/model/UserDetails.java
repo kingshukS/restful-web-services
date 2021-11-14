@@ -1,9 +1,15 @@
 package com.kingshuk.rest.webservices.restfulwebservices.model;
 
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+@JsonIgnoreProperties(value = {"clientId"})
 public class UserDetails {
 
     private String email;
     private String clientId;
+    @JsonIgnore
     private String userPoolId;
     private CustomAttribute customAttributes;
 
