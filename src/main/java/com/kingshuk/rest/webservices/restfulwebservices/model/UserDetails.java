@@ -1,15 +1,20 @@
 package com.kingshuk.rest.webservices.restfulwebservices.model;
 
 
+import com.fasterxml.jackson.annotation.JsonFilter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-@JsonIgnoreProperties(value = {"clientId"})
+// Implementing bean and field level filtering - static filtering - uses super-set of both while producing the json from an object
+//@JsonIgnoreProperties(value = {"clientId"})
+
+// Adding jsonFilter to the bean
+@JsonFilter("myFilter")
 public class UserDetails {
 
     private String email;
     private String clientId;
-    @JsonIgnore
+    //@JsonIgnore
     private String userPoolId;
     private CustomAttribute customAttributes;
 

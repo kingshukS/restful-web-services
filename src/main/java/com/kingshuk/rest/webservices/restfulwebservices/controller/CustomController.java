@@ -1,11 +1,17 @@
 package com.kingshuk.rest.webservices.restfulwebservices.controller;
 
+import com.fasterxml.jackson.databind.ser.FilterProvider;
+import com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter;
+import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
 import com.kingshuk.rest.webservices.restfulwebservices.model.CustomAttribute;
 import com.kingshuk.rest.webservices.restfulwebservices.model.UserDetails;
+import org.springframework.http.converter.json.MappingJacksonValue;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/api/custom-attributes")
@@ -17,7 +23,7 @@ public class CustomController {
     }
 
     @GetMapping("/user-details")
-    public UserDetails getUserDetails() {
+    public MappingJacksonValue getUserDetails() {
         UserDetails userDetails = new UserDetails();
         userDetails.setEmail("myEmail");
         userDetails.setUserPoolId("myPoolId");
@@ -28,11 +34,24 @@ public class CustomController {
 
         userDetails.setCustomAttributes(customAttribute);
 
-        return userDetails;
+        Set<String> fields = new HashSet<>();
+        fields.add("email");
+        FilterProvider filters = getFilterProvider(fields);
+
+        MappingJacksonValue mappingJacksonValue = new MappingJacksonValue(userDetails);
+        mappingJacksonValue.setFilters(filters);
+
+        return mappingJacksonValue;
+    }
+
+    private FilterProvider getFilterProvider(Set<String> fields) {
+        SimpleBeanPropertyFilter filter = SimpleBeanPropertyFilter.filterOutAllExcept(fields);
+        FilterProvider filters = new SimpleFilterProvider().addFilter("myFilter",filter);
+        return filters;
     }
 
     @GetMapping("/user-details-list")
-    public List<UserDetails> getUserDetailsList() {
+    public MappingJacksonValue getUserDetailsList() {
         List<UserDetails> list = new ArrayList<>();
 
         CustomAttribute customAttribute = new CustomAttribute();
@@ -54,6 +73,14 @@ public class CustomController {
         list.add(userDetails1);
         list.add(userDetails2);
 
-        return list;
+        Set<String> fields = new HashSet<>();
+        fields.add("email");
+        fields.add("clientId");
+        FilterProvider filters = getFilterProvider(fields);
+
+        MappingJacksonValue mappingJacksonValue = new MappingJacksonValue(list);
+        mappingJacksonValue.setFilters(filters);
+
+        return mappingJacksonValue;
     }
 }
