@@ -19,7 +19,7 @@ public class UserDaoService {
     private static int userCount = 3;
     private static final Logger logger = LoggerFactory.getLogger(UserDaoService.class);
 
-    @PostConstruct
+    //@PostConstruct
     public void initialize() {
         logger.info(">>initialize()");
 

@@ -1,21 +1,37 @@
 package com.kingshuk.rest.webservices.restfulwebservices.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import org.springframework.util.CollectionUtils;
 
+import javax.persistence.*;
 import javax.validation.constraints.Past;
 import javax.validation.constraints.Size;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+@Entity
+@Table(name = "user")
 public class User {
 
+    @Transient
     private static int postCount = 5;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Integer id;
+
     @Size(min = 2, message = "{error.length.name}")
+    @Column(name = "name")
     private String name;
+
     @Past
+    @Column(name = "birth_date")
     private Date birthDate;
+
+    @JsonManagedReference
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = {CascadeType.ALL})
     private List<Post> posts;
 
     public User() {
@@ -67,15 +83,5 @@ public class User {
         post.setId(++postCount);
         posts.add(post);
         return post;
-    }
-
-    @Override
-    public String toString() {
-        return "User{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", birthDate=" + birthDate +
-                ", posts=" + posts +
-                '}';
     }
 }
